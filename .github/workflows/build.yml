@@ -13,9 +13,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    default:
-      run:
-        working-directory: DevHabit
+    
 
     steps:
       - name: Checkout
@@ -27,13 +25,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore DevHabit.sln
+        run: dotnet restore DevHabit.slnx
 
       - name: Build
-        run: dotnet build DevHabit.sln -c Release --no-restore
+        run: dotnet build DevHabit.slnx -c Release --no-restore
 
       - name: Test
-        run: dotnet test DevHabit.sln -c Release --no-restore --no-build
+        run: dotnet test DevHabit.slnx -c Release --no-restore --no-build
 
       - name: Publish
-        run: dotnet publish DevHabit.sln -c Release --no-restore --no-build
+        run: dotnet publish DevHabit.slnx -c Release --no-restore --no-build
