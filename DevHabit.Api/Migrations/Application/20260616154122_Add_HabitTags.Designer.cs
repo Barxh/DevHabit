@@ -3,6 +3,7 @@ using System;
 using DevHabit.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DevHabit.Api.Migrations.Application
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260616154122_Add_HabitTags")]
+    partial class Add_HabitTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,6 +116,10 @@ namespace DevHabit.Api.Migrations.Application
                         .HasColumnType("character varying(500)")
                         .HasColumnName("description");
 
+                    b.Property<string>("HabitId")
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("habit_id");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -125,6 +132,9 @@ namespace DevHabit.Api.Migrations.Application
 
                     b.HasKey("Id")
                         .HasName("pk_tags");
+
+                    b.HasIndex("HabitId")
+                        .HasDatabaseName("ix_tags_habit_id");
 
                     b.HasIndex("Name")
                         .IsUnique()
@@ -232,9 +242,19 @@ namespace DevHabit.Api.Migrations.Application
                         .HasConstraintName("fk_habit_tags_tags_tag_id");
                 });
 
+            modelBuilder.Entity("DevHabit.Api.Entities.Tag", b =>
+                {
+                    b.HasOne("DevHabit.Api.Entities.Habit", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("HabitId")
+                        .HasConstraintName("fk_tags_habits_habit_id");
+                });
+
             modelBuilder.Entity("DevHabit.Api.Entities.Habit", b =>
                 {
                     b.Navigation("HabitTags");
+
+                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }
