@@ -2,7 +2,6 @@
 using DevHabit.Api.DTOs.Tags;
 using DevHabit.Api.Entities;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -34,17 +33,17 @@ public sealed class TagsController(ApplicationDbContext dbContext) : ControllerB
     [HttpPost]
     public async Task<ActionResult<TagDto>> CreateTag(CreateTagDto dto, IValidator<CreateTagDto> validator, ProblemDetailsFactory probDetailsFactory)
     {
-        ValidationResult vs = await validator.ValidateAsync(dto);
-
-        if (!vs.IsValid)
-        {
-            ProblemDetails problem = probDetailsFactory.CreateProblemDetails(
-                HttpContext, 
-                StatusCodes.Status400BadRequest
-            );
-            problem.Extensions.Add("errors", vs.ToDictionary());
-            return BadRequest(problem);
-        }
+        //ValidationResult vs = await validator.ValidateAsync(dto);
+        await validator.ValidateAndThrowAsync(dto);
+        //if (!vs.IsValid)
+        //{
+        //    ProblemDetails problem = probDetailsFactory.CreateProblemDetails(
+        //        HttpContext, 
+        //        StatusCodes.Status400BadRequest
+        //    );
+        //    problem.Extensions.Add("errors", vs.ToDictionary());
+        //    return BadRequest(problem);
+        //}
 
         Tag tag = dto.ToEntity();
         if(await dbContext.Tags.AnyAsync(t => t.Name == tag.Name))
