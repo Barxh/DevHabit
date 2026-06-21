@@ -16,7 +16,7 @@ public sealed class TagsController(ApplicationDbContext dbContext) : ControllerB
     public async Task<ActionResult<TagsCollectionDto>> GetTags()
     {
         List<TagDto> tags = await dbContext.Tags.Select(TagQueries.ProjectToDto()).ToListAsync();
-        return Ok(new TagsCollectionDto { Data = tags });
+        return Ok(new TagsCollectionDto { Items = tags });
     }
 
     [HttpGet("{id}")]
